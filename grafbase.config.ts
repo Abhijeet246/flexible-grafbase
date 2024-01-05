@@ -1,4 +1,4 @@
-import { g, config, auth } from '@grafbase/sdk'; 
+import { g, config, auth } from '@grafbase/sdk';
 
 // @ts-ignore
 const User = g.model('User', {
@@ -27,13 +27,27 @@ const Project = g.model('Project', {
   rules.private().create().delete().update()
 })
 
+// @ts-ignore
+const AnotherModel = g.model('AnotherModel', {
+  // Define fields for your new model
+  // Example:
+  field1: g.string(),
+  field2: g.number(),
+  // Add any other fields or relationships as needed
+}).auth((rules) => {
+  // Define authorization rules for the new model
+  // Example:
+  rules.public().read()
+  rules.private().create().delete().update()
+})
+
 const jwt = auth.JWT({
   issuer: 'grafbase',
   secret:  g.env('NEXTAUTH_SECRET')
 })
 
 export default config({
-  schema: g,
+  graph: g,
   auth: {
     providers: [jwt],
     rules: (rules) => rules.private()
